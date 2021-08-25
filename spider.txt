@@ -1,0 +1,72 @@
+
+
+
+mysql>CREATE USER userno1s@192.168.10.1 IDENTIFIED BY "no1s";
+
+
+
+mysql>GRANT ALL ON testdb.testtable TO userno1s@192.168.10.1;
+
+
+
+
+
+
+172.17.0.3
+
+
+
+
+$dsn = 'mysql:host={サーバー名};dbname={データベース名};charset={文字エンコード}';
+$db_user = '{ユーザー名}';
+$db_pass = '{パスワード}';
+$driver_options = [
+    変更したい属性 => 値,
+    変更したい属性 => 値,
+];
+
+try {
+    $pdo = new PDO($dsn, $db_user, $db_pass, $driver_options);
+} catch (PDOException $e) {
+    exit('データベース接続失敗。' . $e->getMessage());
+}
+
+
+<?php
+//ここのhostは接続先（mariadbサーバー）を指定.
+//dbnameは作成したdb
+$dsn = 'mysql:host=172.17.0.3;dbname=testdb';
+//許可したいユーザー
+$user = 'roots';
+$password = 'no1s';
+
+try{
+    $dbh = new PDO($dsn, $user, $password);
+    $sql = 'select * from staffname';
+    foreach ($dbh->query($sql) as $row) {
+        print($row['id'].',');
+        print($row['name']);
+        print('<br />');
+    }
+}catch (PDOException $e){
+    print('Error:'.$e->getMessage());
+    die();
+}
+
+$dbh = null;
+
+?>
+
+
+
+	//============= DB ========================
+	$db_host = '172.17.0.2';
+	$db_name = 'testDB';
+	$db_user = 'roots';
+	$db_pass = 'no1s';
+	$connect = mysqli_connect($db_host,$db_user,$db_pass, $db_name) or  die( " SQL server에 연결할 수 없습니다");
+	mysqli_select_db($connect,$db_name);
+	mysqli_query($connect,"SET NAMES 'utf8'");
+	if (mysqli_connect_errno()) {
+	 throw new Exception(mysqli_connect_error(), mysqli_connect_errno());
+	}
